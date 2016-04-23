@@ -51,6 +51,9 @@ g1
 В [документации на сайте пакета](http://docs.ggplot2.org) или в [шпаргалке](http://www.rstudio.com/wp-content/uploads/2015/12/ggplot2-cheatsheet-2.0.pdf) выберите  подходящие систему координат (функции `coord_*`) и тему оформления. Координаты должны иметь   **фиксированное**  отношение (**ratio=1**) цены деления для оси y к цене деления x, а тема оформления должна быть с черно-белой (black-and-white) координатной сеткой.
 
 ```{r proportional,echo=F}
+g2  <- g1 + coord_fixed(ratio=1)+ theme_bw()
+g2
+
 ```
 
 
@@ -68,5 +71,42 @@ g1
 При помощи `stat_function()` добавить график функции  5*sin(x)-8. Добавить название к графику.
 
 ```{r worm,echo=F}
+g4  <- g1 +
+  stat_function(fun = function(x,b) sin(x/b)*5-8, args=list(b=1),n=540)+
+  coord_fixed(ratio=1)+
+  theme_bw()+
+  ggtitle("стройная ласточка и червяк")
+g4
+View(mpg)
+```
+
+### Работа с данными в таблице
+```{r}
+View(mpg)
+table(mpg$manufacturer)
+table(mpg$manufacturer,mpg$year)
+ggplot(data=mpg, aes(x=manufacturer))+geom_bar(fill="blue")
 
 ```
+
+```{r}
+mpg2 <- mpg
+mpg2$cyl.f <- factor(mpg2$cyl)
+str(mpg2)
+ggplot(data=mpg2, aes(x=manufacturer,fill=cyl.f))+geom_bar() + coord_flip() ##поворот графика
+ggplot(data=mpg2, aes(x=manufacturer,fill=drv))+geom_bar() + coord_flip() +scale_fill_brewer(palette="Set1")
+ggplot(data=mpg2, aes(x=manufacturer,fill=drv))+geom_bar() + coord_flip() +scale_fill_brewer(palette="Pastel2")
+ggplot(data=mpg2, aes(x=manufacturer,fill=drv))+geom_bar(position="stack") + coord_flip() +scale_fill_brewer(palette="Pastel2")
+ggplot(data=mpg2, aes(x=manufacturer,fill=drv))+geom_bar(position="dodge") + coord_flip() +scale_fill_brewer(palette="Pastel2")
+
+```
+
+```{r}
+prices <- data.frame(prod=c("хлеб","молоко","кефир"),price=c(28,69,50))
+ggplot(data=prices, aes(x=prod, y=price))+geom_bar(stat="identity")
+ggplot(data=prices, aes(x=prod, y=price))+geom_bar(stat="identity",fill="blue")
+ggplot(data=prices, aes(x=prod, y=price))+geom_bar(stat="identity",fill="green")
+ggplot(data=prices, aes(x=prod, y=price))+geom_bar(stat="identity",fill="green", color="blue")
+
+```
+
